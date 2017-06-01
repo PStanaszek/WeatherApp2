@@ -19,6 +19,8 @@ var id = "c46a632da27f87f7efe0ff1745ef7149";
 
 var days = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
 
+var months = [ "STY", "LUT", "MAR", "KWI", "MAJ", "CZE", "LIP", "SIE", "WRZ", "PAŹ", "LIS", "GRU"]
+
 var conditions = [
     {
     "description": "bezchmurne niebo",
@@ -54,49 +56,50 @@ var conditions = [
     "description": "mgła",
     "backgrounds": 'img/backgrounds/mist.jpg',
     "icon": "img/icons/png/015-clouds-3.png"    
-    }
-    
+    }   
 ];
-function switchWeather(){
+var weatherIconArr = document.querySelectorAll(".weather img");
+
+/*function switchWeather (){
      switch (currentConditions) {
     case 'clear':
-        $("#weather img").attr("src", conditions[0].icon );
+        $(weatherIconArr[i]).attr("src", conditions[0].icon );
         $("#description1").html(conditions[0].description);
         backGroudImage = conditions[0].backgrounds;
         break;
     case 'clouds':
-        $("#weather img").attr("src", conditions[1].icon );
+        $(weatherIconArr[i]).attr("src", conditions[1].icon );
         $("#description1").html(conditions[1].description);
         backGroudImage = conditions[1].backgrounds;
         break;
     case 'drizzle':
-        $("#weather img").attr("src", conditions[4].icon );
+        $(weatherIconArr[i]).attr("src", conditions[2].icon );
+        $("#description1").html(conditions[2].description);
+        backGroudImage = conditions[2].backgrounds;
+        break;
+    case 'rain':
+        $(weatherIconArr[i]).attr("src", conditions[3].icon );
+        $("#description1").html(conditions[3].description);
+        backGroudImage = conditions[3].backgrounds;
+        break;
+    case 'thunderstorm':
+        $(weatherIconArr[i]).attr("src", conditions[4].icon );
         $("#description1").html(conditions[4].description);
         backGroudImage = conditions[4].backgrounds;
         break;
-    case 'rain':
-        $("#weather img").attr("src", conditions[5].icon );
+    case 'snow':
+        $(weatherIconArr[i]).attr("src", conditions[5].icon );
         $("#description1").html(conditions[5].description);
         backGroudImage = conditions[5].backgrounds;
-        break;
-    case 'thunderstorm':
-        $("#weather img").attr("src", conditions[6].icon );
+        break;6
+    case 'atmosphere':
+        $(weatherIconArr[i]).attr("src", conditions[6].icon );
         $("#description1").html(conditions[6].description);
         backGroudImage = conditions[6].backgrounds;
         break;
-    case 'snow':
-        $("#weather img").attr("src", conditions[7].icon );
-        $("#description1").html(conditions[7].description);
-        backGroudImage = conditions[7].backgrounds;
-        break;
-    case 'atmosphere':
-        $("#weather img").attr("src", conditions[8].icon );
-        $("#description1").html(conditions[8].description);
-        backGroudImage = conditions[8].backgrounds;
-        break;
              
 }
-};
+};*/
 
 getWeather();   
 
@@ -136,6 +139,9 @@ getLocation();
         
         date = json.list[0].dt; 
         var d = new Date();
+        var t = new Date(d.getTime()+1000*60*60*24);
+        console.log(t);
+        
         var day = d.getDay();
         
         var day_number = d.getDate();
@@ -153,31 +159,92 @@ getLocation();
         
         tempCround = (Math.round(temp*10))/10;
         $("#current-temp").html(tempCround + " &#186 C");
+    
         
-      /*  tempArr = document.querySelectorAll("#current-temp");*/
-        tempArr = $('div[class="temp"]'); 
-        
-        dateArr = $("[class=date]");
+        /*temperature */
+        dayTempArr = document.querySelectorAll(".temp-day"); 
+        nightTempArr = document.querySelectorAll(".temp-night"); 
+        dateArr = document.querySelectorAll(".date");
         dayArr = document.querySelectorAll(".day");
+        /*temperature*/
         
         for ( var i = 0; i < 5 ; i++){
-            temp = json.list[i].temp.day;
-            tempCround = (Math.round(temp*10))/10;
+            /*temperature*/
+            tempDay = json.list[i].temp.max;
+            tempNight = json.list[i].temp.min;
+            $(dayTempArr[i]).html(Math.round(tempDay) + " &#186 C");
+            $(nightTempArr[i]).html(Math.round(tempNight) + " &#186 C");
+            /*temperature*/
+            
+            /*date*/
+            var dateCalc = new Date(d.getTime()+(1000*60*60*24*i));
+            var numberOfday =dateCalc.getDate()+1;
+            var numberOfmonth = dateCalc.getMonth();
+            var nameOfmonth = months[numberOfmonth];
+            $(dateArr[i]).text(numberOfday + " " + nameOfmonth);
+            /*date*/
+            
+            /*day of the week*/
+            var dayCalc = day+1 + i;
+            var dayNum = dayCalc;
+            if (dayCalc > 6){
+                dayNum = i-2;
+            } 
+            var dayName = days[dayNum];
+            $(dayArr[i]).text(dayName);
+            
+            /*day of the week*/
+            
+            currentConditions = json.list[i].weather[0].main.toLowerCase();
+            
+            function switchWeather (){
+    switch (currentConditions) {
+    case 'clear':
+        $(weatherIconArr[i]).attr("src", conditions[0].icon );
+        $("#description1").html(conditions[0].description);
+        backGroudImage = conditions[0].backgrounds;
+        break;
+    case 'clouds':
+        $(weatherIconArr[i]).attr("src", conditions[1].icon );
+        $("#description1").html(conditions[1].description);
+        backGroudImage = conditions[1].backgrounds;
+        break;
+    case 'drizzle':
+        $(weatherIconArr[i]).attr("src", conditions[2].icon );
+        $("#description1").html(conditions[2].description);
+        backGroudImage = conditions[2].backgrounds;
+        break;
+    case 'rain':
+        $(weatherIconArr[i]).attr("src", conditions[3].icon );
+        $("#description1").html(conditions[3].description);
+        backGroudImage = conditions[3].backgrounds;
+        break;
+    case 'thunderstorm':
+        $(weatherIconArr[i]).attr("src", conditions[4].icon );
+        $("#description1").html(conditions[4].description);
+        backGroudImage = conditions[4].backgrounds;
+        break;
+    case 'snow':
+        $(weatherIconArr[i]).attr("src", conditions[5].icon );
+        $("#description1").html(conditions[5].description);
+        backGroudImage = conditions[5].backgrounds;
+        break;6
+    case 'atmosphere':
+        $(weatherIconArr[i]).attr("src", conditions[6].icon );
+        $("#description1").html(conditions[6].description);
+        backGroudImage = conditions[6].backgrounds;
+        break;
+             
+}
+}
+
+            
+            
+            switchWeather();
             
             
             
-            $(tempArr[i]).html(tempCround + " &#186 C");
-            var a = (day+1) + i;
-            if(a > 6){
-             a = 0;
-         
-            }
-            console.log(a+b);
-            var b = days[a];
            
-            day_number += i;
-            $(dateArr[i]).text(day_number + "." + month_number);
-            $(dayArr[i]).text(b);
             
            
         }

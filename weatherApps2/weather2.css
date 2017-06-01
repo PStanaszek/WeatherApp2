@@ -136,12 +136,12 @@ button{
    margin-top: 1vw;
    color: white;
    box-sizing: content-box;
-    border-radius: 0.5vw;
+   
 
     
 }
 .box{
-   font-size: 1.5vw; 
+    
    font-weight: 500; 
    margin-top: 0.3vw;
    margin: 0 0.5vw 0 0.5vw ; 
@@ -160,6 +160,10 @@ button{
 
 #current-temp{
    font-size: 2vw;
+}
+
+.date-box{
+   font-size: 1.1vw 
 }
 
 .temp {
