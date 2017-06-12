@@ -5,6 +5,8 @@
 /searching by coords
 "http://api.openweathermap.org/data/2.5/weather?lat="+lat +"&lon="+long+"&APPID="+id+""*/
     
+/*google maps API key AIzaSyCRPpawKlCWrn_MMgvy6plcJFKq9HdZCWs*/
+
 
 var lat,long,latDisp,longDisp,
     weatherData, json,
@@ -115,12 +117,16 @@ if (navigator.geolocation){
             long = position.coords.longitude;
             latDisp = (Math.round(lat*1000))/1000;
             longDisp = (Math.round(long*1000))/1000;
-        
  
+    
+    initMap();
     findByCoords();
     findByInput();
+            
+    
              });
         };
+    
    
 };
 
@@ -133,7 +139,7 @@ getLocation();
 
 
     function findByCoords(){                                       
-    $.getJSON("http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=5",function(json){
+    $.getJSON("http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=9",function(json){
             
         console.log(json);
         
@@ -168,7 +174,7 @@ getLocation();
         dayArr = document.querySelectorAll(".day");
         /*temperature*/
         
-        for ( var i = 0; i < 5 ; i++){
+        for ( var i = 0; i < 9 ; i++){
             /*temperature*/
             tempDay = json.list[i].temp.max;
             tempNight = json.list[i].temp.min;
@@ -188,7 +194,7 @@ getLocation();
             var dayCalc = day+1 + i;
             var dayNum = dayCalc;
             if (dayCalc > 6){
-                dayNum = i-2;
+                dayNum = i;
             } 
             var dayName = days[dayNum];
             $(dayArr[i]).text(dayName);
@@ -257,7 +263,8 @@ getLocation();
         $("body").css({"background-image": "url(" + backGroudImage + ")"});
         
         });
-       
+        
+  
        
        
 
@@ -290,5 +297,19 @@ getLocation();
     });
 }                                              
 
+           
+ function initMap() {
+    console.log("Maps ok")
+        var pos = {lat: lat, lng: long};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: pos
+        });
+        var marker = new google.maps.Marker({
+          position: pos,
+          map: map,
+          
+        });
+      } 
 
 
