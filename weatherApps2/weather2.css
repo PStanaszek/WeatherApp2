@@ -17,11 +17,7 @@ body{
     
 }
 
-div{
-   
-    margin: 0 auto;
-    
-}
+
 .logo{
     font-family: 'Trench';
     font-size: 70px;
@@ -117,11 +113,6 @@ button{
     
 }
 
-.current-weather img{
-     max-height: 6vw;
-     
-}
-
 .weather-img img{
      max-height: 4vw;;
      
@@ -131,19 +122,16 @@ button{
 .weather {
   /* margin: %;*/
    background-color: rgba(31,31,31,0.8);
-   padding: 0.5vw;
-    
-   margin-top: 1vw;
+   margin-top: 5px;
    color: white;
-   box-sizing: content-box;
+    background-size: cover; 
+
 }
 .current-weather{
-      background-color: rgba(31,31,31,0.8);
-   padding: 0.5vw;
-    
-   margin-top: 1vw;
+  background-color: rgba(31,31,31,0.8);
+
    color: white;
-   box-sizing: content-box;  
+ 
     }   
 
     
@@ -151,20 +139,12 @@ button{
 .box{
     
    font-weight: 500; 
-   margin-top: 0.3vw;
-   margin: 0 0.5vw 0 0.5vw ; 
-}
-#now-weather{
-    min-height: 15vw;
+   
+
 }
 
-#location
-{
-    min-height: 15vw;
-    display: flex;
-    align-items: center;
-    font-size: 2vw;
-}
+
+
 
 #current-temp{
    font-size: 2vw;
@@ -173,25 +153,84 @@ button{
 .date-box{
    font-size: 1.1vw 
 }
+/*current weather divs style*/
+.weather-description div{
+    font-size: 18px;
+}
+.title{
+ text-align: left;
+  
+    
+}    
+    
 
-.temp {
-   
-    padding: 0px;
+.values{
+    text-align: right;
+    width: 100%;
+    padding: -15px;
+    border-bottom: 1px solid white;
 }
 
-.temp:nth-of-type(odd){
+
+#location
+{
+    
+    align-items: center;
+    font-size: 40px;
+}
+.current-weather-img {
+    text-align: left;
+}
+
+.current-weather-img img{
+    width: 120px;
+}
+
+.temp{
+    margin: 0px;
+    padding: 0px;
+    background-color: none;
+}
+.temp-current{
+   font-size: 50px;
+   text-align: left;
+   padding-top: 10%;
+   margin-left: -10%;
+
+}
+
+
+/*current weather divs style*/
+/*.temp:nth-of-type(odd){
     background-color: white;
     color: black;
+    
 }
 
 .temp:nth-of-type(even){
     background-color: darkblue;
     color: yellow;
-}
+    
+}*/
 
 #map {
-   width: 100%;
-   height: 35vw;
+   width: 90%;
+   height: 271px;
    background-color: grey;
-   margin-top: 5%;
+   
  }
+/*Hourly weather divs style*/
+.hourly{
+    border-top: 1px solid white;
+    padding-top: 5px;
+}
+
+.hour-img img{
+    max-width: 30px;
+    margin: 0 auto;
+}
+
+.hours{
+   padding: 0px;
+    margin: 0px;
+}z
