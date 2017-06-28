@@ -267,8 +267,7 @@ function hourlyByCoords(){
 
 function dailyByCoords(){                                       
 $.getJSON(urls[2].url,function(json){
-        
-        console.log("dni");
+        console.log("pogoda na dni");
         console.log(json);
         date = json.list[0].dt; 
         var d = new Date();
@@ -296,10 +295,17 @@ $.getJSON(urls[2].url,function(json){
         
         /*temperature */
         dayTempArr = document.querySelectorAll(".temp-day"); 
-        nightTempArr = document.querySelectorAll(".temp-night"); 
+        nightTempArr = document.querySelectorAll(".temp-night");
+        /*temperature*/
+        /*date*/
         dateArr = document.querySelectorAll(".date");
         dayArr = document.querySelectorAll(".day");
-        /*temperature*/
+        /*date*/
+    
+        /*description */
+        descriptionArr = document.querySelectorAll(".forecast-description");
+        /*description */
+        
         
         for ( var i = 0; i < 9 ; i++){
             /*temperature*/
@@ -328,11 +334,15 @@ $.getJSON(urls[2].url,function(json){
             
             /*day of the week*/
             
+            /*condition description and change of icon*/
             condition = json.list[i].weather[0].main.toLowerCase();
-             
-            
+            var descrip = json.list["0"].weather["0"].description;
+           
+            descriptionArr[i].textContent = descrip;
             switchWeather();
-   
+            
+            /*condition description and change of icon*/
+    
             }
         });
     };
