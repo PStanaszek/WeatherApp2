@@ -16,6 +16,11 @@ body {
 	background-position: cover;
 	font-family: 'Exo', sans-serif;
 }
+
+.col-lg-12{
+    padding: 5px;
+}
+
 .logo {
 	font-family: 'Trench';
 	font-size: 70px;
@@ -117,23 +122,22 @@ button {
 
 .weather-description div {
 	font-size: 18px;
-    margin: 2px -15px 2px -15px;
+    margin: 0px -15px 2px -15px;
 
 }
 .title {
 	text-align: left;
-    margin-left: -20px;
-    margin-right: -20px;
+    
 
 }
 .values {
 	text-align: right;
 	float: right;
-    margin-right: -15px;
+    
 
 }
 #location {
-	align-items: center;
+	text-align: left;
 	font-size: 40px;
 }
 .current-weather-img {
@@ -169,17 +173,22 @@ button {
     
 }*/
 
+.weather-container{
+    height: 320px;/*zmienic wartość przy media queries*/
+}
 #map {
 	width: 100%;
-	height: 271px;
+	height: 100%;
 	background-color: grey;
+    margin-left: -15px;
+
 }
 
 /*Hourly weather divs style*/
 
 .hourly {
 	border-top: 1px solid white;
-	padding-top: 5px;
+    padding: 10px -15px 0 -30px;
 }
 .hour-img img {
 	max-width: 30px;
@@ -188,7 +197,39 @@ button {
 .hours {
 	padding: 0px;
 	margin: 0px;
+    
 }
-#forecast {
-	margin-left: -15px;
+
+
+
+.weather-forecast{
+    margin-left:-15px;
+    margin-top: 5px;
+}
+
+.daily-icon{
+    max-width: 70px;
+    margin: -10px auto -2px auto;
+}
+
+.temp-day{
+    font-size: 18px;
+    padding-right: 5px;
+}
+
+.temp-day img{
+    max-width: 20px;
+    float: left;
+    vertical-align: middle;
+}
+
+.temp-night{
+    font-size: 18px;
+    color: rgba(235, 235, 235, 0.8)
+}
+
+.temp-night img{
+    max-width: 18px;
+    float: left;
+    vertical-align: middle;
 }

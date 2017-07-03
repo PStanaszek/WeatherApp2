@@ -13,7 +13,7 @@ var lat,long,latDisp,longDisp,
     cityName,
     temp,tempC,tempArr,
     currentConditions,icon,backGroudImage,
-    date,dateArr,dayArr;
+    date,dateArr,dayArr,descrip;
     
 var input = document.querySelector("input").value;
 
@@ -34,11 +34,11 @@ var urls = [
     },
     {
   name: "dailyByCoords",
-  url:  "http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=9&lang=pl"
+  url:  "http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=6&lang=pl"
     },
     {
   name: "currentByInput",
-  url:  "http://api.openweathermap.org/data/2.5/weather?q="+input+"&APPID="+id+""
+  url:  "http://api.openweathermap.org/data/2.5/weather?q="+input+"&APPID="+id+"&units=metric"
     },
     {
   name: "hourlyByInput",
@@ -162,7 +162,7 @@ if (navigator.geolocation){
     },
     {
   name: "dailyByCoords",
-  url:  "http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=9&lang=pl"
+  url:"http://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat +"&lon="+long+"&APPID="+id+"&units=metric&cnt=9&lang=pl"
     },
     {
   name: "currentByInput",
@@ -182,6 +182,8 @@ if (navigator.geolocation){
      currentByCoords();
      hourlyByCoords();
      dailyByCoords();
+     findByInput();
+     initMap();
     
              });
         };
@@ -306,13 +308,17 @@ $.getJSON(urls[2].url,function(json){
         descriptionArr = document.querySelectorAll(".forecast-description");
         /*description */
         
+        /*icon daily forecast*/
+        var dailyIcon = document.querySelectorAll(".daily-icon");
+        /*icon daily forecast*/
+    
         
-        for ( var i = 0; i < 9 ; i++){
+        for ( var i = 0; i < 6 ; i++){
             /*temperature*/
             tempDay = json.list[i].temp.max;
             tempNight = json.list[i].temp.min;
-            $(dayTempArr[i]).html(Math.round(tempDay) + " &#186 C");
-            $(nightTempArr[i]).html(Math.round(tempNight) + " &#186 C");
+            $(dayTempArr[i]).html(Math.round(tempDay) + " &#186 C" + '<img src="img/icons/png/050-sun.png" alt="">');
+            $(nightTempArr[i]).html(Math.round(tempNight) + " &#186 C" + '<img src="img/icons/png/028-moon-2.png" alt="">');
             /*temperature*/
             
             /*date*/
@@ -336,11 +342,12 @@ $.getJSON(urls[2].url,function(json){
             
             /*condition description and change of icon*/
             condition = json.list[i].weather[0].main.toLowerCase();
-            var descrip = json.list["0"].weather["0"].description;
-           
-            descriptionArr[i].textContent = descrip;
-            switchWeather();
+            descrip = json.list[i].weather[0].description;
+            $(descriptionArr[i]).text = descrip;
             
+            
+            switchWeather();
+            dailyIcon[i].setAttribute("src", icon);
             /*condition description and change of icon*/
     
             }
@@ -355,49 +362,70 @@ $.getJSON(urls[2].url,function(json){
   
     
             
-/*    function findByInput(){
+    function findByInput(){
     
         $("button").on("click", function(e){
-          
+       input = document.querySelector("input").value;
+            console.log(input);
 
-        input = document.querySelector("input").value; 
-
-        $.getJSON("http://api.openweathermap.org/data/2.5/forecast/daily?q="+input+"&APPID="+id+"&units=metric&cnt=5&lang={pl}",function(json){
-         
-            console.log(json);    
-        cityName = json.city.name;
-        $("#location").text(cityName);
-        temp = json.list[0].temp.day
-        tempC = temp-273.15;
-        tempCround = (Math.round(tempC*10))/10;
-        $("#current-temp").html(tempCround + " &#186 C");
-        currentConditions = json.list[0].weather[0].main.toLowerCase();
-        console.log(currentConditions);
+   /*problem z pobraniem urla z obkiertu url, input definiowany przed wprowadzeniem, jest pusty, i takie url jest pobierany do funkcji*/
+            
+   /*poprawić funkcje mpay, musi pobierac nowe coordynaty */        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+input+"&APPID="+id+"&units=metric&lang=pl",function(json){
+         console.log(urls[3].name);
+       console.log(json);
+       /*Name of current location*/
+       cityName = json.name;
+       document.querySelector("#location").textContent = cityName;
+       /*Current conditions*/
+       condition = json.weather[0].main.toLowerCase();
+       /*Change background according to current weather*/
         switchWeather();
         $("body").css({"background-image": "url(" + backGroudImage + ")"});
+       /*Change icon*/
+        document.querySelector(".current-weather-img img").setAttribute("src", icon);
+        /*Current temperature*/
+        var nowTemp = (Math.round(json.main.temp*10))/10 + "&#186 C";
+        document.querySelector(".temp-current").innerHTML = nowTemp;
+       /*Weather description*/
+       document.querySelector(".current-description").textContent = json.weather[0].description;
+       /*Wind*/
+       document.querySelector(".current-wind").textContent = json.wind.speed + " m/s";
+       /*Pressure*/
+       document.querySelector(".current-pressure").textContent = json.main.pressure + " hPa";
+       /*Cloudiness*/
+       document.querySelector(".current-cloudness").textContent = json.clouds.all + " %";
+       /*Humidity*/
+       document.querySelector(".current-humidity").textContent = json.main.humidity + " %";
         
         });
        
     });
 }                                          
 
-     */      
-/*
- function initMap() {
+           
+ 
+/*map function*/
+function initMap() {
     console.log("Maps ok")
         var pos = {lat: lat, lng: long};
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15,
+          zoom: 10,
           center: pos
         });
+        var icon = {
+            url: "img/icons/png/016-bolt.png", 
+            scaledSize: new google.maps.Size(70, 70), 
+            origin: new google.maps.Point(0,0),
+            anchor: new google.maps.Point(0, 0) 
+        };
         var marker = new google.maps.Marker({
           position: pos,
           map: map,
+          icon: icon,
           
         });
       };
-*/
-
+/*map function*/
 
 
 
