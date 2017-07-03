@@ -13,7 +13,7 @@ var lat,long,latDisp,longDisp,
     cityName,
     temp,tempC,tempArr,
     currentConditions,icon,backGroudImage,
-    date,dateArr,dayArr,descrip;
+    date,dateArr,dayArr,descriptionArr
     
 var input = document.querySelector("input").value;
 
@@ -46,7 +46,7 @@ var urls = [
     },
     {
   name: "dailyByInput",
-  url: "http://api.openweathermap.org/data/2.5/forecast/daily?q="+input+"&APPID="+id+"&units=metric&cnt=5&lang={pl}"
+  url: "http://api.openweathermap.org/data/2.5/forecast/daily?q="+input+"&APPID="+id+"&units=metric&cnt=6&lang=pl"
     }
 ];
 
@@ -230,10 +230,12 @@ function currentByCoords(){
 /*Current weather function, searchig by coords */
 
  /*Hourly weather function, searchig by coords */
+var hourArr = document.querySelectorAll(".hour");
+var hourIconArr = document.querySelectorAll(".hour-img img");
+var hourTempArr = document.querySelectorAll(".hour-temp");
+
 function hourlyByCoords(){
-  var hourArr = document.querySelectorAll(".hour");
-  var hourIconArr = document.querySelectorAll(".hour-img img");
-  var hourTempArr = document.querySelectorAll(".hour-temp");
+  
  
   $.getJSON(urls[1].url,function(json){
        console.log("godzinowo"); 
@@ -342,8 +344,8 @@ $.getJSON(urls[2].url,function(json){
             
             /*condition description and change of icon*/
             condition = json.list[i].weather[0].main.toLowerCase();
-            descrip = json.list[i].weather[0].description;
-            $(descriptionArr[i]).text = descrip;
+            
+            descriptionArr[i].textContent = json.list[i].weather[0].description;
             
             
             switchWeather();
@@ -369,9 +371,11 @@ $.getJSON(urls[2].url,function(json){
             console.log(input);
 
    /*problem z pobraniem urla z obkiertu url, input definiowany przed wprowadzeniem, jest pusty, i takie url jest pobierany do funkcji*/
-            
+    function  currentByInput(){       
    /*poprawić funkcje mpay, musi pobierac nowe coordynaty */        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+input+"&APPID="+id+"&units=metric&lang=pl",function(json){
-         console.log(urls[3].name);
+       
+        console.log(urls[3].name);
+       console.log(json.name);
        console.log(json);
        /*Name of current location*/
        cityName = json.name;
@@ -396,11 +400,158 @@ $.getJSON(urls[2].url,function(json){
        document.querySelector(".current-cloudness").textContent = json.clouds.all + " %";
        /*Humidity*/
        document.querySelector(".current-humidity").textContent = json.main.humidity + " %";
+       
+       /*MAP OF CURRENT SEARCHING*/
+        var searchLat = json.coord.lat;
+        var searchLon = json.coord.lon;
+        function initMap() {
+        console.log("Maps ok")
+        var pos = {lat: searchLat, lng: searchLon};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: pos
+        });
+        var icon = {
+            url: "img/icons/png/016-bolt.png", 
+            scaledSize: new google.maps.Size(50, 50), 
+            origin: new google.maps.Point(0,0),
+            anchor: new google.maps.Point(0, 0) 
+        };
+        var marker = new google.maps.Marker({
+          position: pos,
+          map: map,
+          icon: icon,
+          
+        });
+      };
+    initMap();
+    
         
         });
        
+    }
+    function hourlyByInput(){
+  
+ 
+  $.getJSON("http://api.openweathermap.org/data/2.5/forecast?q="+input+"&APPID="+id+"&units=metric&cnt=12",function(json){
+       console.log("godzinowo"); 
+       console.log(json); 
+      
+      for ( var i = 0; i < 12 ; i++){
+       /*set hour*/   
+      var hour = new Date(json.list[i].dt_txt);   
+      var getHour = hour.getHours();
+     
+      hourArr[i].textContent = getHour + ":00";
+      /*Hourly conditions*/
+      condition = json.list[i].weather[0].main.toLowerCase();
+      switchWeather();
+      hourIconArr[i].setAttribute("src", icon);
+      /*Hourly temperature*/     
+      var hourTemp = Math.round(json.list[i].main.temp) + "&#186 C";
+      hourTempArr[i].innerHTML = hourTemp;
+          
+         
+      
+      }
+     
     });
-}                                          
+};
+            
+function dailyByInput(){                                       
+$.getJSON("http://api.openweathermap.org/data/2.5/forecast/daily?q="+input+"&APPID="+id+"&units=metric&cnt=6&lang=pl",function(json){
+        console.log("pogoda na dni");
+        console.log(json);
+        date = json.list[0].dt; 
+        var d = new Date();
+        var t = new Date(d.getTime()+1000*60*60*24);
+        console.log(t);
+        
+        var day = d.getDay();
+        
+        var day_number = d.getDate();
+        var month_number = d.getMonth() + 1;
+        
+        var day_name = days[day];
+        
+        
+        $(".date").text(day_number + "." + month_number);
+        $(".day").text(day_name);
+       
+        cityName = json.city.name;
+        $("#location").text(cityName);
+        temp = json.list[0].temp.day
+        
+        tempCround = (Math.round(temp*10))/10;
+        $("#current-temp").html(tempCround + " &#186 C");
+    
+        
+        /*temperature */
+        dayTempArr = document.querySelectorAll(".temp-day"); 
+        nightTempArr = document.querySelectorAll(".temp-night");
+        /*temperature*/
+        /*date*/
+        dateArr = document.querySelectorAll(".date");
+        dayArr = document.querySelectorAll(".day");
+        /*date*/
+    
+        /*description */
+        descriptionArr = document.querySelectorAll(".forecast-description");
+        /*description */
+        
+        /*icon daily forecast*/
+        var dailyIcon = document.querySelectorAll(".daily-icon");
+        /*icon daily forecast*/
+    
+        
+        for ( var i = 0; i < 6 ; i++){
+            /*temperature*/
+            tempDay = json.list[i].temp.max;
+            tempNight = json.list[i].temp.min;
+            $(dayTempArr[i]).html(Math.round(tempDay) + " &#186 C" + '<img src="img/icons/png/050-sun.png" alt="">');
+            $(nightTempArr[i]).html(Math.round(tempNight) + " &#186 C" + '<img src="img/icons/png/028-moon-2.png" alt="">');
+            /*temperature*/
+            
+            /*date*/
+            var dateCalc = new Date(d.getTime()+(1000*60*60*24*i));
+            var numberOfday =dateCalc.getDate()+1;
+            var numberOfmonth = dateCalc.getMonth();
+            var nameOfmonth = months[numberOfmonth];
+            $(dateArr[i]).text(numberOfday + " " + nameOfmonth);
+            /*date*/
+            
+            /*day of the week*/
+            var dayCalc = day+1 + i;
+            var dayNum = dayCalc;
+            if (dayCalc > 6){
+                dayNum = i;
+            } 
+            var dayName = days[dayNum];
+            $(dayArr[i]).text(dayName);
+            
+            /*day of the week*/
+            
+            /*condition description and change of icon*/
+            condition = json.list[i].weather[0].main.toLowerCase();
+            descriptionArr[i].textContent = json.list[i].weather[0].description;
+            
+            
+            switchWeather();
+            dailyIcon[i].setAttribute("src", icon);
+            /*condition description and change of icon*/
+    
+            }
+        });
+    };
+    currentByInput();
+    hourlyByInput();
+    dailyByInput();
+    
+    
+        });
+                  
+}
+      
 
            
  
